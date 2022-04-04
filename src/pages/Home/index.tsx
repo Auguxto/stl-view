@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { StlViewer } from "react-stl-viewer";
 import { HexColorPicker } from "react-colorful";
 import { useDropzone } from "react-dropzone";
@@ -22,24 +22,35 @@ const Home = () => {
   );
   const [selectedFile, setSelectedFile] = useState<File>();
   const [modelColor, setModelColor] = useState("#ffffff");
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: "model/stl",
+  const onDrop = useCallback(async (acceptedFiles) => {
+    setSelectedFile(acceptedFiles[0]);
 
-    onDropAccepted: async (acceptedFiles) => {
-      setSelectedFile(acceptedFiles[0]);
+    let formData = new FormData();
 
-      let formData = new FormData();
+    formData.append("file", acceptedFiles[0]);
 
-      formData.append("file", acceptedFiles[0] as Blob);
+    const response = await api.post("/upload", formData, {
+      onUploadProgress: (event) => {
+        setUploading(true);
+        let progress: number = Math.round((event.loaded * 100) / event.total);
 
-      const response = await api.post("/upload", formData);
+        setUploadProgress(progress);
 
-      console.log(response.data);
+        if (progress === 100) setUploading(false);
+      },
+    });
 
-      setModel(response.data);
-    },
-  });
+    setModel(`http://192.168.10.253:3333/models/${response.data}`);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  useEffect(() => {
+    console.log("Ola");
+  }, [selectedFile]);
 
   return (
     <S.Container>
@@ -51,16 +62,27 @@ const Home = () => {
         <HexColorPicker color={modelColor} onChange={setModelColor} />
       </S.Menu>
       <S.Content>
-        <StlViewer
-          style={style}
-          modelProps={{
-            color: modelColor,
-          }}
-          orbitControls
-          showAxes
-          shadows
-          url={model}
-        />
+        {/* <S.UploadingContent>
+          <S.UploadProgressBar progress={uploadProgress} />
+          <S.UploadProgressText>{uploadProgress}%</S.UploadProgressText>
+        </S.UploadingContent> */}
+        {uploading ? (
+          <S.UploadingContent>
+            <S.UploadProgressBar progress={uploadProgress} />
+            <S.UploadProgressText>{uploadProgress}%</S.UploadProgressText>
+          </S.UploadingContent>
+        ) : (
+          <StlViewer
+            style={style}
+            modelProps={{
+              color: modelColor,
+            }}
+            orbitControls
+            showAxes
+            shadows
+            url={model}
+          />
+        )}
       </S.Content>
     </S.Container>
   );

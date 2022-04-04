@@ -76,3 +76,34 @@ export const Content = styled.div`
 
   background: #20232a;
 `;
+
+export const UploadingContent = styled.div`
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100vh;
+
+  background: #20232a;
+`;
+
+export const UploadProgressBar = styled.div<{ progress: number }>`
+  width: ${(props) => `${props.progress * 2}px`};
+  height: 10px;
+
+  border-radius: 5px;
+
+  background: #6ff542;
+`;
+
+export const UploadProgressText = styled.div`
+  font-weight: bold;
+
+  color: #ffffff;
+
+  margin-top: 5px;
+`;
