@@ -58,7 +58,7 @@ export const Dropzone = styled.div`
 export const DropzoneText = styled.span`
   font-weight: bold;
 
-  color: #20232a;
+  color: #ffffff;
 `;
 
 export const DropzoneInput = styled.input`

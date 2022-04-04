@@ -6,9 +6,6 @@ import { useDropzone } from "react-dropzone";
 import * as S from "./styles.home";
 import api from "../../lib/api";
 
-const url =
-  "https://storage.googleapis.com/ucloud-v3/ccab50f18fb14c91ccca300a.stl";
-
 const style = {
   top: 0,
   left: 0,
@@ -57,15 +54,11 @@ const Home = () => {
       <S.Menu>
         <S.Dropzone {...getRootProps({ className: "dropzone" })}>
           <S.DropzoneInput {...getInputProps()} />
-          <S.DropzoneText>Drag&drop your 3D file here</S.DropzoneText>
+          <S.DropzoneText>Drag&drop your STL file here</S.DropzoneText>
         </S.Dropzone>
         <HexColorPicker color={modelColor} onChange={setModelColor} />
       </S.Menu>
       <S.Content>
-        {/* <S.UploadingContent>
-          <S.UploadProgressBar progress={uploadProgress} />
-          <S.UploadProgressText>{uploadProgress}%</S.UploadProgressText>
-        </S.UploadingContent> */}
         {uploading ? (
           <S.UploadingContent>
             <S.UploadProgressBar progress={uploadProgress} />
