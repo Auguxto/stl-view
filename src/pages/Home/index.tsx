@@ -40,7 +40,7 @@ const Home = () => {
       },
     });
 
-    setModel(`http://192.168.10.253:3333/models/${response.data}`);
+    setModel(`http://localhost:3333/models/${response.data}`);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
